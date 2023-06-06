@@ -10,9 +10,11 @@ interface VendorDoc extends Document {
   email: string;
   password: string;
   salt: string;
-  serviceAvailable: string;
+  serviceAvailable: boolean;
   coverImages: string[];
   rating: number;
+  lat: number;
+  lng: number;
   // foods: any;
 }
 
@@ -31,6 +33,8 @@ const VendorSchema = new Schema({
   serviceAvailable: {type: Boolean},
   coverImages: {type: [String]},
   rating: {type: Number},
+  lat: { type: Number},
+  lng: {type: Number}
   // foods: [{
   //   type: mongoose.SchemaTypes.ObjectId,
   //   ref: 'food'
