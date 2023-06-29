@@ -55,7 +55,7 @@ export const UpdateVendorProfile = async (req: Request,res: Response, next: Next
      if(existingVendor !== null){
 
           existingVendor.name = name;
-          existingVendor.address// = address;
+          existingVendor.address
           existingVendor.phone = phone;
           existingVendor.foodType = foodType;
           const saveResult = await existingVendor.save();

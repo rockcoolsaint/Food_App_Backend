@@ -3,7 +3,7 @@ import express, {Application} from "express";
 // import { MONGO_URI } from "./config";
 import { AdminRoute, VendorRoute } from "../routes";
 import path from 'path';
-import { ShoppingRoute } from "../routes/ShoppingRoute";
+import { ShoppingRoutes } from "../routes/ShoppingRoutes";
 
 export default async (app: Application) => {
 
@@ -15,7 +15,7 @@ export default async (app: Application) => {
   
   app.use('/admin', AdminRoute);
   app.use('/vendor', VendorRoute);
-  app.use('/shopping', ShoppingRoute);
+  app.use(ShoppingRoutes);
 
   return app;
 }
