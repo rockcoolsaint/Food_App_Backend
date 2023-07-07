@@ -1,9 +1,9 @@
 import express, {Application} from "express";
 // import mongoose from "mongoose";
 // import { MONGO_URI } from "./config";
-import { AdminRoute, ShoppingRoutes, VendorRoute, CustomerRoute } from "../routes";
+import { AdminRoute, VendorRoute } from "../routes";
 import path from 'path';
-// import { ShoppingRoutes } from "../routes/ShoppingRoutes";
+import { ShoppingRoutes } from "../routes/ShoppingRoutes";
 
 export default async (app: Application) => {
 
@@ -15,7 +15,6 @@ export default async (app: Application) => {
   
   app.use('/admin', AdminRoute);
   app.use('/vendor', VendorRoute);
-  app.use('/', CustomerRoute);
   app.use(ShoppingRoutes);
 
   return app;
