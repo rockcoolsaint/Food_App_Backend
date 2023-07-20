@@ -322,6 +322,8 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
                 orderStatus: 'Waiting',
                 remarks: '',
                 deliveryId: '',
+                appliedOffers: false,
+                offerId: null,
                 readyTime: 45
             })
 
@@ -392,7 +394,7 @@ export const AddToCart = async (req: Request, res: Response, next: NextFunction)
     
     if(customer){
 
-        const profile = await Customer.findById(customer._id);
+        const profile = await (await Customer.findById(customer._id)).populate('cart.food');
         let cartItems = Array();
 
         const { _id, unit } = <CartItem>req.body;
@@ -446,7 +448,7 @@ export const GetCart = async (req: Request, res: Response, next: NextFunction) =
     const customer = req.user;
     
     if(customer){
-        const profile = await Customer.findById(customer._id);
+        const profile = await (await Customer.findById(customer._id)).populated('cart.food');
 
         if(profile){
             return res.status(200).json(profile.cart);

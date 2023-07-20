@@ -1,4 +1,4 @@
-import { AuthPayload } from "../../Auth.dto";
+import { AuthPayload } from "../../src/dto";
 // export {};
 
 declare global {

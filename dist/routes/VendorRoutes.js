@@ -7,7 +7,7 @@ exports.VendorRoute = void 0;
 var express_1 = __importDefault(require("express"));
 var multer_1 = __importDefault(require("multer"));
 var controllers_1 = require("../controllers");
-var middlewares_1 = require("../middlewares");
+var middleware_1 = require("../middleware");
 var router = express_1.default.Router();
 exports.VendorRoute = router;
 var imageStorage = multer_1.default.diskStorage({
@@ -20,7 +20,7 @@ var imageStorage = multer_1.default.diskStorage({
 });
 var images = (0, multer_1.default)({ storage: imageStorage }).array('images', 10);
 router.post('/login', controllers_1.VendorLogin);
-router.use(middlewares_1.Authenticate);
+router.use(middleware_1.Authenticate);
 router.get('/profile', controllers_1.GetVendorProfile);
 router.patch('/profile', controllers_1.UpdateVendorProfile);
 router.patch('/coverimage', images, controllers_1.UpdateVendorCoverImage);

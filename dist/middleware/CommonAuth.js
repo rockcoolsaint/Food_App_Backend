@@ -35,37 +35,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-// import express from "express";
-var mongoose_1 = __importDefault(require("mongoose"));
-var config_1 = require("../config");
-// if(!MONGO_URI) {
-//   throw new Error('error')
-// };
-exports.default = (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var error_1;
+exports.Authenticate = void 0;
+var utility_1 = require("../utility");
+// declare global {
+//   namespace Express {
+//     interface Request {
+//       user?: AuthPayload;
+//     }
+//   }
+// }
+var Authenticate = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var signature;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, mongoose_1.default.connect(config_1.MONGO_URI)];
+            case 0: return [4 /*yield*/, (0, utility_1.ValidateSignature)(req)];
             case 1:
-                _a.sent();
-                console.log('DB Connected');
-                return [3 /*break*/, 3];
-            case 2:
-                error_1 = _a.sent();
-                console.log('error' + error_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+                signature = _a.sent();
+                if (signature) {
+                    return [2 /*return*/, next()];
+                }
+                else {
+                    return [2 /*return*/, res.json({ message: "User Not authorised" })];
+                }
+                return [2 /*return*/];
         }
     });
-}); });
-// mongoose.connect(MONGO_URI).then(() => {
-//   console.log('DB Connected');
-// }).catch(err => console.log('error'+ err));
-// "nodemon --watch './**/*.ts' --exec ts-node src/index.ts"
-//# sourceMappingURL=Database.js.map
+}); };
+exports.Authenticate = Authenticate;
+//# sourceMappingURL=CommonAuth.js.map

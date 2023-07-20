@@ -1,6 +1,6 @@
 // import express from "express";
 import mongoose, { ConnectOptions } from "mongoose";
-import { MONGO_URI } from "../../../config";
+import { MONGO_URI } from "../config";
 
 // if(!MONGO_URI) {
 //   throw new Error('error')
