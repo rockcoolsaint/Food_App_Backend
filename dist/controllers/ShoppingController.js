@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RestaurantsById = exports.SearchFoods = exports.GetFoodsIn30Mins = exports.GetTopRestaurants = exports.GetFoodAvailability = void 0;
+exports.GetAvailableOffers = exports.RestaurantsById = exports.SearchFoods = exports.GetFoodsIn30Mins = exports.GetTopRestaurants = exports.GetFoodAvailability = void 0;
 var models_1 = require("../models");
 var GetFoodAvailability = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var pincode, result;
@@ -136,4 +136,21 @@ var RestaurantsById = function (req, res, next) { return __awaiter(void 0, void 
     });
 }); };
 exports.RestaurantsById = RestaurantsById;
+var GetAvailableOffers = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var pincode, offers;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                pincode = req.params.pincode;
+                return [4 /*yield*/, models_1.Offer.find({ pincode: pincode, isActive: true })];
+            case 1:
+                offers = _a.sent();
+                if (offers) {
+                    return [2 /*return*/, res.status(200).json(offers)];
+                }
+                return [2 /*return*/, res.json({ message: 'Offers not Found!' })];
+        }
+    });
+}); };
+exports.GetAvailableOffers = GetAvailableOffers;
 //# sourceMappingURL=ShoppingController.js.map

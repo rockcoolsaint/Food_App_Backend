@@ -2,10 +2,7 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import express, { Request, Response, NextFunction } from 'express';
 import { CartItem, CreateCustomerInput, EditCustomerProfileInput, OrderInputs, UserLoginInput } from '../dto';
-import {Customer, DeliveryUser, Food, Vendor} from '../models';
-// import { Offer } from '../models/Offer';
-import { Order } from '../models/Order';
-// import { Transaction } from '../models/Transaction';
+import {Customer, DeliveryUser, Food, Offer, Order, Transaction, Vendor} from '../models';
 import { GenerateOtp, GeneratePassword, GenerateSalt, GenerateSignature, onRequestOTP, ValidatePassword } from '../utility';
 
 export const CustomerSignUp = async (req: Request, res: Response, next: NextFunction) => {
@@ -290,7 +287,7 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
 
         const orderId = `${Math.floor(Math.random() * 89999)+ 1000}`;
 
-        const cart = <[CartItem]>req.body;
+        // const cart = <[CartItem]>req.body;
 
         let cartItems = Array();
 
@@ -298,10 +295,10 @@ export const CreateOrder = async (req: Request, res: Response, next: NextFunctio
 
         let vendorId;
 
-        const foods = await Food.find().where('_id').in(cart.map(item => item._id)).exec();
+        const foods = await Food.find().where('_id').in(items.map(item => item._id)).exec();
 
         foods.map(food => {
-            cart.map(({ _id, unit}) => {
+            items.map(({ _id, unit}) => {
                 if(food._id == _id){
                     vendorId = food.vendorId;
                     netAmount += (food.price * unit);
@@ -497,6 +494,15 @@ export const VerifyOffer = async (req: Request, res: Response, next: NextFunctio
             if(appliedOffer.isActive){
                 return res.status(200).json({ message: 'Offer is Valid', offer: appliedOffer});
             }
+
+            // Alternatively
+            // if(appliedOffer.promoType == "USER") {
+            //     // only can apply once
+            // } else {
+            //     if(appliedOffer.isActive) {
+            //         return res.status(200).json({ message: 'Offer is Valid', offer: appliedOffer })
+            //     }
+            // }
         }
 
     }
@@ -530,7 +536,7 @@ export const CreatePayment = async (req: Request, res: Response, next: NextFunct
         orderId: '',
         orderValue: payableAmount,
         offerUsed: offerId || 'NA',
-        status: 'OPEN',
+        status: 'OPEN', // Failed // Success
         paymentMode: paymentMode,
         paymentResponse: 'Payment is cash on Delivery'
     })

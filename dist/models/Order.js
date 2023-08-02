@@ -37,6 +37,10 @@ var OrderSchema = new mongoose_1.Schema({
     totalAmount: { type: Number, require: true },
     paidAmount: { type: Number, require: true },
     orderDate: { type: Date },
+    paidThrough: { type: String },
+    PaymentResponse: {
+        type: String,
+    },
     orderStatus: { type: String },
     remarks: { type: String },
     deliveryId: { type: String },

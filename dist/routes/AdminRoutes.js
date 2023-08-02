@@ -11,6 +11,10 @@ exports.AdminRoute = router;
 router.post('/vendor', controllers_1.CreateVendor);
 router.get('/vendors', controllers_1.GetVendors);
 router.get('/vendor/:id', controllers_1.GetVendorById);
+router.get('/transactions', controllers_1.GetTransactions);
+router.get('/transaction/:id', controllers_1.GetTransactionById);
+router.put('/delivery/verify', controllers_1.VerifyDeliveryUser);
+router.get('/delivery/users', controllers_1.GetDeliveryUsers);
 router.get('/', function (req, res, next) {
     res.json({ message: "Hello from Admin" });
 });

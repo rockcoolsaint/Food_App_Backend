@@ -41,9 +41,6 @@ var class_transformer_1 = require("class-transformer");
 var class_validator_1 = require("class-validator");
 var dto_1 = require("../dto");
 var models_1 = require("../models");
-// import { Offer } from '../models/Offer';
-var Order_1 = require("../models/Order");
-// import { Transaction } from '../models/Transaction';
 var utility_1 = require("../utility");
 var CustomerSignUp = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var customerInputs, validationError, email, phone, password, salt, userPassword, _a, otp, expiry, existingCustomer, result, signature;
@@ -275,7 +272,7 @@ var assignOrderForDelivery = function (orderId, vendorId) { return __awaiter(voi
             case 2:
                 deliveryPerson = _a.sent();
                 if (!deliveryPerson) return [3 /*break*/, 5];
-                return [4 /*yield*/, Order_1.Order.findById(orderId)];
+                return [4 /*yield*/, models_1.Order.findById(orderId)];
             case 3:
                 currentOrder = _a.sent();
                 if (!currentOrder) return [3 /*break*/, 5];
@@ -294,7 +291,7 @@ var validateTransaction = function (txnId) { return __awaiter(void 0, void 0, vo
     var currentTransaction;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, Transaction.findById(txnId)];
+            case 0: return [4 /*yield*/, models_1.Transaction.findById(txnId)];
             case 1:
                 currentTransaction = _a.sent();
                 if (currentTransaction) {
@@ -307,7 +304,7 @@ var validateTransaction = function (txnId) { return __awaiter(void 0, void 0, vo
     });
 }); };
 var CreateOrder = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var customer, _a, txnId, amount, items, _b, status_1, currentTransaction, profile, orderId, cart_1, cartItems_1, netAmount_1, vendorId_1, foods, currentOrder, profileResponse;
+    var customer, _a, txnId, amount, items, _b, status_1, currentTransaction, profile, orderId, cartItems_1, netAmount_1, vendorId_1, foods, currentOrder, profileResponse;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
@@ -324,14 +321,13 @@ var CreateOrder = function (req, res, next) { return __awaiter(void 0, void 0, v
             case 2:
                 profile = _c.sent();
                 orderId = "".concat(Math.floor(Math.random() * 89999) + 1000);
-                cart_1 = req.body;
                 cartItems_1 = Array();
                 netAmount_1 = 0.0;
-                return [4 /*yield*/, models_1.Food.find().where('_id').in(cart_1.map(function (item) { return item._id; })).exec()];
+                return [4 /*yield*/, models_1.Food.find().where('_id').in(items.map(function (item) { return item._id; })).exec()];
             case 3:
                 foods = _c.sent();
                 foods.map(function (food) {
-                    cart_1.map(function (_a) {
+                    items.map(function (_a) {
                         var _id = _a._id, unit = _a.unit;
                         if (food._id == _id) {
                             vendorId_1 = food.vendorId;
@@ -341,7 +337,7 @@ var CreateOrder = function (req, res, next) { return __awaiter(void 0, void 0, v
                     });
                 });
                 if (!cartItems_1) return [3 /*break*/, 8];
-                return [4 /*yield*/, Order_1.Order.create({
+                return [4 /*yield*/, models_1.Order.create({
                         orderId: orderId,
                         vendorId: vendorId_1,
                         items: cartItems_1,
@@ -351,6 +347,8 @@ var CreateOrder = function (req, res, next) { return __awaiter(void 0, void 0, v
                         orderStatus: 'Waiting',
                         remarks: '',
                         deliveryId: '',
+                        appliedOffers: false,
+                        offerId: null,
                         readyTime: 45
                     })];
             case 4:
@@ -469,15 +467,16 @@ var GetCart = function (req, res, next) { return __awaiter(void 0, void 0, void 
         switch (_a.label) {
             case 0:
                 customer = req.user;
-                if (!customer) return [3 /*break*/, 2];
+                if (!customer) return [3 /*break*/, 3];
                 return [4 /*yield*/, models_1.Customer.findById(customer._id)];
-            case 1:
+            case 1: return [4 /*yield*/, (_a.sent()).populated('cart.food')];
+            case 2:
                 profile = _a.sent();
                 if (profile) {
                     return [2 /*return*/, res.status(200).json(profile.cart)];
                 }
-                _a.label = 2;
-            case 2: return [2 /*return*/, res.status(400).json({ message: 'Cart is Empty!' })];
+                _a.label = 3;
+            case 3: return [2 /*return*/, res.status(400).json({ message: 'Cart is Empty!' })];
         }
     });
 }); };
@@ -511,13 +510,21 @@ var VerifyOffer = function (req, res, next) { return __awaiter(void 0, void 0, v
                 offerId = req.params.id;
                 customer = req.user;
                 if (!customer) return [3 /*break*/, 2];
-                return [4 /*yield*/, Offer.findById(offerId)];
+                return [4 /*yield*/, models_1.Offer.findById(offerId)];
             case 1:
                 appliedOffer = _a.sent();
                 if (appliedOffer) {
                     if (appliedOffer.isActive) {
                         return [2 /*return*/, res.status(200).json({ message: 'Offer is Valid', offer: appliedOffer })];
                     }
+                    // Alternatively
+                    // if(appliedOffer.promoType == "USER") {
+                    //     // only can apply once
+                    // } else {
+                    //     if(appliedOffer.isActive) {
+                    //         return res.status(200).json({ message: 'Offer is Valid', offer: appliedOffer })
+                    //     }
+                    // }
                 }
                 _a.label = 2;
             case 2: return [2 /*return*/, res.status(400).json({ msg: 'Offer is Not Valid' })];
@@ -534,14 +541,14 @@ var CreatePayment = function (req, res, next) { return __awaiter(void 0, void 0,
                 _a = req.body, amount = _a.amount, paymentMode = _a.paymentMode, offerId = _a.offerId;
                 payableAmount = Number(amount);
                 if (!offerId) return [3 /*break*/, 2];
-                return [4 /*yield*/, Offer.findById(offerId)];
+                return [4 /*yield*/, models_1.Offer.findById(offerId)];
             case 1:
                 appliedOffer = _b.sent();
                 if (appliedOffer.isActive) {
                     payableAmount = (payableAmount - appliedOffer.offerAmount);
                 }
                 _b.label = 2;
-            case 2: return [4 /*yield*/, Transaction.create({
+            case 2: return [4 /*yield*/, models_1.Transaction.create({
                     customer: customer._id,
                     vendorId: '',
                     orderId: '',

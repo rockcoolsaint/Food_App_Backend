@@ -8,9 +8,16 @@ var express_1 = __importDefault(require("express"));
 var controllers_1 = require("../controllers");
 var router = express_1.default.Router();
 exports.ShoppingRoutes = router;
+/* ------------------- Food Availability --------------------- */
 router.get('/:pincode', controllers_1.GetFoodAvailability);
-router.get('/top-restaurants/:pincode', controllers_1.GetTopRestaurants);
+/* ------------------- Top Restaurant --------------------- */
+router.get('/top-restaurant/:pincode', controllers_1.GetTopRestaurants);
+/* ------------------- Food Available in 30 Minutes --------------------- */
 router.get('/foods-in-30-min/:pincode', controllers_1.GetFoodsIn30Mins);
+/* ------------------- Search Foods --------------------- */
 router.get('/search/:pincode', controllers_1.SearchFoods);
+/* ------------------- Search Offers --------------------- */
+router.get('/offers/:pincode', controllers_1.GetAvailableOffers);
+/* ------------------- Find Restaurant by ID --------------------- */
 router.get('/restaurant/:id', controllers_1.RestaurantsById);
 //# sourceMappingURL=ShoppingRoutes.js.map

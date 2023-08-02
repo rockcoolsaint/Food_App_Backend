@@ -46,12 +46,14 @@ exports.default = (function (app) { return __awaiter(void 0, void 0, void 0, fun
     return __generator(this, function (_a) {
         // const app = express();
         // const PORT = process.env.PORT || 5000;
+        // const imagePath = path.join(__dirname, '../images');
         app.use(express_1.default.json({ limit: '50mb' }));
         app.use(express_1.default.urlencoded({ extended: true }));
         app.use('/images', express_1.default.static(path_1.default.join(__dirname, 'images')));
         app.use('/admin', routes_1.AdminRoute);
         app.use('/vendor', routes_1.VendorRoute);
         app.use('/vendor', routes_1.CustomerRoute);
+        app.use('/delivery', routes_1.DeliveryRoute);
         app.use(routes_1.ShoppingRoutes);
         return [2 /*return*/, app];
     });

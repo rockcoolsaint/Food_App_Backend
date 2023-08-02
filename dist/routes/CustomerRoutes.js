@@ -7,6 +7,7 @@ exports.CustomerRoute = void 0;
 var express_1 = __importDefault(require("express"));
 var controllers_1 = require("../controllers");
 var middleware_1 = require("../middleware");
+// import { Offer } from '../models/Offer';
 var router = express_1.default.Router();
 exports.CustomerRoute = router;
 /* ------------------- Suignup / Create Customer --------------------- */
